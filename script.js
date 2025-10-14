@@ -1,39 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
     const themeSwitch = document.querySelector('.theme-switch');
-    const themeSwitchIcon = document.querySelector('.theme-switch i');
-    
-    // 检查用户之前选择的主题
+    const body = document.body;
+
+    // Check for saved theme preference or use system preference
     const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeSwitchIcon.classList.remove('fa-moon');
-        themeSwitchIcon.classList.add('fa-sun');
+    if (savedTheme) {
+        body.dataset.theme = savedTheme;
+        updateIcon(savedTheme);
+    } else {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const initialTheme = prefersDark ? 'dark' : 'light';
+        body.dataset.theme = initialTheme;
+        updateIcon(initialTheme);
     }
-    
-    // 主题切换功能
+
     themeSwitch.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        
-        if (currentTheme === 'dark') {
-            document.documentElement.removeAttribute('data-theme');
-            localStorage.setItem('theme', 'light');
-            themeSwitchIcon.classList.remove('fa-sun');
-            themeSwitchIcon.classList.add('fa-moon');
-        } else {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
-            themeSwitchIcon.classList.remove('fa-moon');
-            themeSwitchIcon.classList.add('fa-sun');
-        }
+        let newTheme = body.dataset.theme === 'light' ? 'dark' : 'light';
+        body.dataset.theme = newTheme;
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
     });
-    
-    // 根据系统偏好设置初始主题（如果没有用户设置的主题）
-    if (!savedTheme) {
-        const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (prefersDarkMode) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            themeSwitchIcon.classList.remove('fa-moon');
-            themeSwitchIcon.classList.add('fa-sun');
+
+    function updateIcon(theme) {
+        const icon = themeSwitch.querySelector('i');
+        if (theme === 'dark') {
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        } else {
+            icon.classList.remove('fa-sun');
+            icon.classList.add('fa-moon');
         }
     }
+
+    const socialLinks = document.querySelectorAll('.social-link-item');
+    const linkPreview = document.getElementById('link-preview');
+
+    socialLinks.forEach(link => {
+        link.addEventListener('mouseenter', () => {
+            const url = link.getAttribute('href');
+            linkPreview.textContent = url;
+            linkPreview.style.opacity = '1';
+        });
+
+        link.addEventListener('mouseleave', () => {
+            linkPreview.style.opacity = '0';
+        });
+    });
 }); 
