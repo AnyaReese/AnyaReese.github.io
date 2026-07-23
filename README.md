@@ -1,23 +1,23 @@
-# Anya Reese 个人主页
+# Anya Reese Personal Site
 
-这是基于GitHub Pages的个人主页项目，包含了个人介绍、知识库、幻灯片展示等内容。
+This is a GitHub Pages personal site with a landing page, profile links, slides, and project links.
 
-## 功能特点
+## Features
 
-## 文件内容
+## Files
 
-- `index.html` - 主页
-- `about` - TODO：个人简历
-- `notebook` - TODO: 笔记本页面
-- `wiki` - 前端样例
-- `slides` - `reveal-md` 幻灯片展示页面
-- `styles.css` - 全局样式
-- `script.js` - JavaScript脚本（主题切换等功能）
-- `js/waves.js` - 波浪背景动画脚本
-- `js/Noise.js` - Perlin噪声实现
+- `index.html` - home page
+- `about` - TODO: resume page
+- `notebook` - TODO: notebook page
+- `wiki` - frontend demo
+- `slides` - `reveal-md` slide page
+- `styles.css` - global styles
+- `script.js` - JavaScript for theme switching and interactions
+- `js/waves.js` - wave background animation
+- `js/Noise.js` - Perlin noise implementation
 
-## 使用说明
+## Usage
 
-1. 克隆此仓库
-2. 根据需要修改内容
-3. 推送到 GitHub，通过 GitHub Pages 功能发布
+1. Clone this repository.
+2. Update the content as needed.
+3. Push to GitHub and publish with GitHub Pages.

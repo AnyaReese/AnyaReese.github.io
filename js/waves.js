@@ -1,15 +1,15 @@
 /**
- * 波浪背景动画效果
+ * Wave background animation.
  */
 class AWaves extends HTMLElement {
   /**
-   * 初始化
+   * Initialize
    */
   connectedCallback() {
-    // 获取元素
+    // Get elements
     this.svg = this.querySelector('.js-svg')
 
-    // 属性
+    // State
     this.mouse = {
       x: -10,
       y: 0,
@@ -27,18 +27,18 @@ class AWaves extends HTMLElement {
     this.paths = []
     this.noise = new Noise(Math.random())
 
-    // 初始化
+    // Initialize
     this.setSize()
     this.setLines()
 
     this.bindEvents()
     
-    // 启动动画循环
+    // Start animation loop
     requestAnimationFrame(this.tick.bind(this))
   }
 
   /**
-   * 绑定事件
+   * Bind events
    */
   bindEvents() {
     window.addEventListener('resize', this.onResize.bind(this))
@@ -48,7 +48,7 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 调整大小处理
+   * Resize handler
    */
   onResize() {
     this.setSize()
@@ -56,14 +56,14 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 鼠标移动处理
+   * Mouse movement handler
    */
   onMouseMove(e) {
     this.updateMousePosition(e.pageX, e.pageY)
   }
 
   /**
-   * 触摸处理
+   * Touch handler
    */
   onTouchMove(e) {
     e.preventDefault()
@@ -73,7 +73,7 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 更新鼠标位置
+   * Update mouse position
    */
   updateMousePosition(x, y) {
     const { mouse } = this
@@ -92,7 +92,7 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 设置尺寸
+   * Set dimensions
    */
   setSize() {
     this.bounding = this.getBoundingClientRect()
@@ -102,7 +102,7 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 设置线条
+   * Set lines
    */
   setLines() {
     const { width, height } = this.bounding
@@ -140,7 +140,7 @@ class AWaves extends HTMLElement {
         points.push(point)
       }
 
-      // 创建路径
+      // Create path
       const path = document.createElementNS(
         'http://www.w3.org/2000/svg',
         'path'
@@ -151,20 +151,20 @@ class AWaves extends HTMLElement {
       this.svg.appendChild(path)
       this.paths.push(path)
 
-      // 添加点
+      // Add points
       this.lines.push(points)
     }
   }
 
   /**
-   * 移动点
+   * Move points
    */
   movePoints(time) {
     const { lines, mouse, noise } = this
 
     lines.forEach((points) => {
       points.forEach((p) => {
-        // 波浪运动
+        // Wave motion
         const move =
               noise.perlin2(
                 (p.x + time * 0.0125) * 0.002,
@@ -173,7 +173,7 @@ class AWaves extends HTMLElement {
         p.wave.x = Math.cos(move) * 32
         p.wave.y = Math.sin(move) * 16
 
-        // 鼠标效果
+        // Mouse effect
         const dx = p.x - mouse.sx
         const dy = p.y - mouse.sy
         const d = Math.hypot(dx, dy)
@@ -187,23 +187,23 @@ class AWaves extends HTMLElement {
           p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00065
         }
 
-        p.cursor.vx += (0 - p.cursor.x) * 0.005 // 弦张力
+        p.cursor.vx += (0 - p.cursor.x) * 0.005 // string tension
         p.cursor.vy += (0 - p.cursor.y) * 0.005
 
-        p.cursor.vx *= 0.925 // 摩擦/持续时间
+        p.cursor.vx *= 0.925 // friction / duration
         p.cursor.vy *= 0.925
 
-        p.cursor.x += p.cursor.vx * 2 // 强度
+        p.cursor.x += p.cursor.vx * 2 // strength
         p.cursor.y += p.cursor.vy * 2
 
-        p.cursor.x = Math.min(100, Math.max(-100, p.cursor.x)) // 限制移动
+        p.cursor.x = Math.min(100, Math.max(-100, p.cursor.x)) // limit movement
         p.cursor.y = Math.min(100, Math.max(-100, p.cursor.y))
       })
     })
   }
 
   /**
-   * 获取添加移动后的点坐标
+   * Get point coordinates after movement
    */
   moved(point, withCursorForce = true) {
     const coords = {
@@ -211,7 +211,7 @@ class AWaves extends HTMLElement {
       y: point.y + point.wave.y + (withCursorForce ? point.cursor.y : 0),
     }
 
-    // 四舍五入到小数点后1位
+    // Round to one decimal place
     coords.x = Math.round(coords.x * 10) / 10
     coords.y = Math.round(coords.y * 10) / 10
 
@@ -219,7 +219,7 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 绘制线条
+   * Draw lines
    */
   drawLines() {
     const { lines, paths } = this
@@ -247,16 +247,16 @@ class AWaves extends HTMLElement {
   }
 
   /**
-   * 动画循环
+   * Animation loop
    */
   tick(time) {
     const { mouse } = this
 
-    // 平滑鼠标移动
+    // Smooth mouse movement
     mouse.sx += (mouse.x - mouse.sx) * 0.1
     mouse.sy += (mouse.y - mouse.sy) * 0.1
 
-    // 鼠标速度
+    // Mouse speed
     const dx = mouse.x - mouse.lx
     const dy = mouse.y - mouse.ly
     const d = Math.hypot(dx, dy)
@@ -265,14 +265,14 @@ class AWaves extends HTMLElement {
     mouse.vs += (d - mouse.vs) * 0.1
     mouse.vs = Math.min(100, mouse.vs)
 
-    // 鼠标上一个位置
+    // Previous mouse position
     mouse.lx = mouse.x
     mouse.ly = mouse.y
 
-    // 鼠标角度
+    // Mouse angle
     mouse.a = Math.atan2(dy, dx)
 
-    // 动画
+    // Animate
     this.style.setProperty('--x', `${mouse.sx}px`)
     this.style.setProperty('--y', `${mouse.sy}px`)
 
@@ -283,5 +283,5 @@ class AWaves extends HTMLElement {
   }
 }
 
-// 注册自定义元素
-customElements.define('a-waves', AWaves) 
+// Register custom element
+customElements.define('a-waves', AWaves)
